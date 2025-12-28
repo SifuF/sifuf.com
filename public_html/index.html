@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SifuF's Homepage</title>
+    <link rel="stylesheet" type="text/css" href="css/style1.css" />
+    <script type="text/javascript" src="common/Cango3D2v00.js"></script>
+    <script type="text/javascript">
+      var xCoord = 0;
+      var yCoord = 120;
+      var radius = 10;
+      var aniCount = 0;
+      var xPos = 400;
+      var yPos = 82;
+      var runLeft = false;
+      var runRight = false;
+      var faceRight = false;
+      var moving = false;
+      var jumping = false;
+      var shooting = false;
+      var shootBullet = false;
+      var bulletStart = 300;
+      var bulletRight = true;
+      var keyUp = 0;
+      var keyDown = 0;
+      var keyLeft = 0;
+      var keyRight = 0;
+      var bulletSound = new Audio();
+      var bulletSound2 = new Audio();
+      var crash1Sound = new Audio();
+      var crash2Sound = new Audio();
+      var glass1Sound = new Audio();
+      var glass2Sound = new Audio();
+      var metal1Sound = new Audio();
+      var bulletAlt = true;
+      var carNumStates = 14;
+      var carPos = 0;
+      var carState = 0;
+      var carHit = false;
+      var carSingleHit = false;
+      var hitting = false;
+      var debrisCounter = 0;
+      var finalState = 0;
+      var stateFrames = 10;
+      var debrisDir = 0;
+      var spurtCounter = 0;
+      var spurtLength = 0;
+      var imgObjJumpA = new Image();
+      var imgObjJumpB = new Image();
+      var imgObjJumpC = new Image();
+      var imgObjJumpAL = new Image();
+      var imgObjJumpBL = new Image();
+      var imgObjJumpCL = new Image();
+      var imgObjStandA = new Image();
+      var imgObjStandB = new Image();
+      var imgObjStandAL = new Image();
+      var imgObjStandBL = new Image();
+      var imgObjRunA = new Image();
+      var imgObjRunB = new Image();
+      var imgObjRunC = new Image();
+      var imgObjRunD = new Image();
+      var imgObjRunE = new Image();
+      var imgObjRunF = new Image();
+      var imgObjRunAL = new Image();
+      var imgObjRunBL = new Image();
+      var imgObjRunCL = new Image();
+      var imgObjRunDL = new Image();
+      var imgObjRunEL = new Image();
+      var imgObjRunFL = new Image();
+      var imgObjShootA = new Image();
+      var imgObjShootAL = new Image();
+      var imgObjBulletA = new Image();
+      var imgObjShadowA = new Image();
+      var imgObjCar0 = new Image();
+      var imgObjCar1 = new Image();
+      var imgObjCar2 = new Image();
+      var imgObjCar3 = new Image();
+      var imgObjCar4 = new Image();
+      var imgObjCar5 = new Image();
+      var imgObjCar6 = new Image();
+      var imgObjCar7 = new Image();
+      var imgObjCar8 = new Image();
+      var imgObjCar9 = new Image();
+      var imgObjCar10 = new Image();
+      var imgObjCar11 = new Image();
+      var imgObjCar12 = new Image();
+      var imgObjCar13 = new Image();
+      var imgObjCarHit0 = new Image();
+      var imgObjCarHit1 = new Image();
+      var imgObjCarHit2 = new Image();
+      var imgObjCarHit3 = new Image();
+      var imgObjCarHit4 = new Image();
+      var imgObjCarHit5 = new Image();
+      var imgObjCarHit6 = new Image();
+      var imgObjCarHit7 = new Image();
+      var imgObjCarHit8 = new Image();
+      var imgObjCarHit9 = new Image();
+      var imgObjCarHit10 = new Image();
+      var imgObjCarHit11 = new Image();
+      var imgObjCarHit12 = new Image();
+      var imgObjCarHit13 = new Image();
+      var imgObjCarDebris0 = new Image();
+      var imgObjCarDebris1 = new Image();
+      var imgObjCarDebris2 = new Image();
+      var imgObjCarDebris3 = new Image();
+      var imgObjCarDebris4 = new Image();
+      var imgObjCarDebris5 = new Image();
+      var imgObjCarDebris6 = new Image();
+      var imgObjCarDebris7 = new Image();
+      var imgObjCarDebris8 = new Image();
+      var imgObjCarDebris9 = new Image();
+      var imgObjCarDebris10 = new Image();
+      var imgObjCarDebris11 = new Image();
+      var imgObjCarDebris12 = new Image();
+      var imgObjCarDebris13 = new Image();
+      var imgObjCarSpurt1 = new Image();
+      var imgObjCarSpurt2 = new Image();
+      var imgObjCarSpurt3 = new Image();
+      var imgObjCarSpurt4 = new Image();
+      var imgObjCarSpurt5 = new Image();
+      var imgObjCarSpurt6 = new Image();
+      var imgObjBackGround = new Image();
+      var imgObjSkip = new Image();
+      var imgObjKeyUp = new Image();
+      var imgObjKeyDown = new Image();
+      var imgObjKeyLeft = new Image();
+      var imgObjKeyRight = new Image();
+      var imgObjExplosion1 = new Image();
+
+      function clearCanv() {
+        var s = document.getElementById("animationWindow");
+        var w = s.width;
+        s.width = 10;
+        s.width = w;
+      }
+
+      function circle(x, y, r) {
+        var c = document.getElementById("animationWindow");
+        var ctx = c.getContext("2d");
+        ctx.drawImage(imgObjBulletA, x, y, radius, radius);
+      }
+
+      function drawCircle() {
+        circle(bulletStart + xCoord, yCoord - radius / 2, radius);
+        if (radius == 30) {
+          if (bulletAlt) {
+            bulletSound.currentTime = 0;
+            bulletSound.play();
+          } else {
+            bulletSound2.currentTime = 0;
+            bulletSound2.play();
+          }
+          bulletAlt = !bulletAlt;
+        }
+
+        if (bulletRight) {
+          radius += 10;
+          xCoord += 50;
+        } else {
+          radius += 10;
+          xCoord -= 50;
+        }
+
+        if (Math.abs(bulletStart + xCoord - carPos) < 100) {
+          if (!carSingleHit) {
+            carHit = true;
+            carSingleHit = true;
+          }
+        } else if (bulletRight & (bulletStart < 220)) {
+          if (!carSingleHit) {
+            carHit = true;
+            carSingleHit = true;
+          }
+        }
+
+        if ((radius > 350) | (xCoord > 800) | (xCoord < -800)) {
+          radius = 30;
+          xCoord = 0;
+          shootBullet = false;
+          carSingleHit = false;
+        }
+      }
+
+      function drawCar() {
+        var c = document.getElementById("animationWindow");
+        var ctx = c.getContext("2d");
+        if (carHit) {
+          carHit = false;
+          if (carState < carNumStates - 1) {
+            carState++;
+            hitting = 3;
+            debrisDir = 20000 * Math.random();
+            r = 4 * Math.random();
+            if (r < 1) {
+              glass1Sound.currentTime = 0;
+              glass1Sound.play();
+            } else if (r < 2) {
+              glass2Sound.currentTime = 0;
+              glass2Sound.play();
+            } else if (r < 3) {
+              crash1Sound.currentTime = 0;
+              crash1Sound.play();
+            } else {
+              metal1Sound.currentTime = 0;
+              metal1Sound.play();
+            }
+          }
+        }
+
+        if (carSingleHit) {
+          debrisCounter++;
+          if (carState < carNumStates) {
+            if (carState < carNumStates - 1) {
+              ctx.drawImage(
+                imgObjExplosion1,
+                carPos + 30 * Math.random(),
+                30 + 30 * Math.random()
+              );
+            }
+
+            if (carState == 0)
+              ctx.drawImage(
+                imgObjCarDebris0,
+                carPos + 40 * debrisCounter,
+                30 + 30 * Math.random() - 5 * debrisCounter
+              );
+            else if (carState == 1)
+              ctx.drawImage(
+                imgObjCarDebris1,
+                carPos + 40 * debrisCounter,
+                60 + 50 * Math.random() + 5 * debrisCounter
+              );
+            else if (carState == 2)
+              ctx.drawImage(
+                imgObjCarDebris2,
+                carPos + 20 * debrisCounter,
+                70 + 10 * Math.random() - 5 * debrisCounter
+              );
+            else if (carState == 3)
+              ctx.drawImage(
+                imgObjCarDebris3,
+                carPos + 40 * debrisCounter,
+                40 + 60 * Math.random() + 5 * debrisCounter
+              );
+            else if (carState == 4)
+              ctx.drawImage(
+                imgObjCarDebris4,
+                carPos + 30 * debrisCounter,
+                30 + 30 * Math.random() - 5 * debrisCounter
+              );
+            else if (carState == 5)
+              ctx.drawImage(
+                imgObjCarDebris5,
+                carPos - 40 * debrisCounter,
+                30 + 80 * Math.random() + 5 * debrisCounter
+              );
+            else if (carState == 6)
+              ctx.drawImage(
+                imgObjCarDebris6,
+                carPos + 40 * debrisCounter,
+                30 + 30 * Math.random() - 5 * debrisCounter
+              );
+            else if (carState == 7)
+              ctx.drawImage(
+                imgObjCarDebris7,
+                carPos + 30 * debrisCounter,
+                -30 + 40 * Math.random() + 5 * debrisCounter
+              );
+            else if (carState == 8)
+              ctx.drawImage(
+                imgObjCarDebris8,
+                carPos + 70 * debrisCounter,
+                30 + 20 * Math.random() - 5 * debrisCounter
+              );
+            else if (carState == 9)
+              ctx.drawImage(
+                imgObjCarDebris9,
+                carPos - 40 * debrisCounter,
+                30 + 30 * Math.random() + 5 * debrisCounter
+              );
+            else if (carState == 10)
+              ctx.drawImage(
+                imgObjCarDebris10,
+                carPos + 40 * debrisCounter,
+                -30 + 60 * Math.random() - 5 * debrisCounter
+              );
+            else if (carState == 11)
+              ctx.drawImage(
+                imgObjCarDebris11,
+                carPos + 60 * debrisCounter,
+                30 + 10 * Math.random() + 5 * debrisCounter
+              );
+            else if (carState == 12)
+              ctx.drawImage(
+                imgObjCarDebris12,
+                carPos + 50 * debrisCounter,
+                30 + 40 * Math.random() + 5 * debrisCounter
+              );
+            else if (carState == 13) {
+              if (finalState < stateFrames) {
+                ctx.drawImage(
+                  imgObjCarDebris13,
+                  carPos + 40 * finalState,
+                  30 + 30 * Math.random() - 5 * finalState
+                );
+                ctx.drawImage(
+                  imgObjExplosion1,
+                  carPos + 30 * Math.random(),
+                  30 + 30 * Math.random()
+                );
+                finalState++;
+              }
+            }
+          }
+        } else {
+          debrisCounter = 0;
+        }
+
+        if (hitting <= 0) {
+          if (carState == 0) ctx.drawImage(imgObjCar0, carPos, 65);
+          else if (carState == 1) ctx.drawImage(imgObjCar1, carPos, 65);
+          else if (carState == 2) ctx.drawImage(imgObjCar2, carPos, 65);
+          else if (carState == 3) ctx.drawImage(imgObjCar3, carPos, 65);
+          else if (carState == 4) ctx.drawImage(imgObjCar4, carPos, 65);
+          else if (carState == 5) ctx.drawImage(imgObjCar5, carPos, 65);
+          else if (carState == 6) ctx.drawImage(imgObjCar6, carPos, 65);
+          else if (carState == 7) ctx.drawImage(imgObjCar7, carPos, 65);
+          else if (carState == 8) ctx.drawImage(imgObjCar8, carPos, 65);
+          else if (carState == 9) ctx.drawImage(imgObjCar9, carPos, 65);
+          else if (carState == 10) ctx.drawImage(imgObjCar10, carPos, 65);
+          else if (carState == 11) ctx.drawImage(imgObjCar11, carPos, 65);
+          else if (carState == 12) ctx.drawImage(imgObjCar12, carPos, 65);
+          else if (carState == 13) ctx.drawImage(imgObjCar13, carPos, 65);
+        } else {
+          hitting--;
+          if (carState == 0) ctx.drawImage(imgObjCarHit0, carPos, 65);
+          else if (carState == 1) ctx.drawImage(imgObjCarHit1, carPos, 65);
+          else if (carState == 2) ctx.drawImage(imgObjCarHit2, carPos, 65);
+          else if (carState == 3) ctx.drawImage(imgObjCarHit3, carPos, 65);
+          else if (carState == 4) ctx.drawImage(imgObjCarHit4, carPos, 65);
+          else if (carState == 5) ctx.drawImage(imgObjCarHit5, carPos, 65);
+          else if (carState == 6) ctx.drawImage(imgObjCarHit6, carPos, 65);
+          else if (carState == 7) ctx.drawImage(imgObjCarHit7, carPos, 65);
+          else if (carState == 8) ctx.drawImage(imgObjCarHit8, carPos, 65);
+          else if (carState == 9) ctx.drawImage(imgObjCarHit9, carPos, 65);
+          else if (carState == 10) ctx.drawImage(imgObjCarHit10, carPos, 65);
+          else if (carState == 11) ctx.drawImage(imgObjCarHit11, carPos, 65);
+          else if (carState == 12) ctx.drawImage(imgObjCarHit12, carPos, 65);
+          else if (carState == 13) ctx.drawImage(imgObjCarHit13, carPos, 65);
+        }
+
+        if ((carState > carNumStates - 2) & (spurtLength < 200)) {
+          if (spurtCounter <= 0) {
+            ctx.drawImage(imgObjCarSpurt1, carPos + 140, 90);
+            ctx.drawImage(imgObjCarSpurt6, carPos + 105, 110);
+          } else if (spurtCounter <= 3) {
+            ctx.drawImage(imgObjCarSpurt2, carPos + 140, 90);
+            ctx.drawImage(imgObjCarSpurt5, carPos + 105, 110);
+          } else if (spurtCounter <= 6) {
+            ctx.drawImage(imgObjCarSpurt3, carPos + 140, 90);
+            ctx.drawImage(imgObjCarSpurt4, carPos + 105, 110);
+          } else {
+            spurtCounter = 0;
+          }
+          spurtCounter++;
+          spurtLength++;
+        }
+      }
+
+      function drawSprite() {
+        var c = document.getElementById("animationWindow");
+        var ctx = c.getContext("2d");
+        ctx.drawImage(imgObjBackGround, 0, -40);
+        ctx.drawImage(
+          imgObjShadowA,
+          xPos + 10 - 0.3 * (yPos - 82),
+          162 + 0.1 * yPos,
+          0.2 * (yPos - 82) + 100,
+          0.35 * (yPos - 82) + 40
+        );
+        ctx.drawImage(imgObjSkip, 200, 75);
+        ctx.drawImage(imgObjKeyUp, 510 + keyUp, -5 + keyUp);
+        ctx.drawImage(imgObjKeyLeft, 510 + keyLeft, -5 + keyLeft);
+        ctx.drawImage(imgObjKeyDown, 510 + keyDown, -5 + keyDown);
+        ctx.drawImage(imgObjKeyRight, 510 + keyRight, -5 + keyRight);
+        drawCar();
+        if (shooting) {
+          if (!jumping) {
+            if (!moving) {
+              if (faceRight) {
+                ctx.drawImage(imgObjShootA, xPos - 21, yPos - 5);
+              } else {
+                ctx.drawImage(imgObjShootAL, xPos - 29, yPos - 5);
+              }
+
+              if (shootBullet) {
+                drawCircle();
+              }
+              shootBullet = true;
+              return;
+            }
+          }
+        }
+
+        if (shootBullet) {
+          drawCircle();
+        }
+
+        if (jumping) {
+          if (faceRight) {
+            if (aniCount < 10) {
+              ctx.drawImage(imgObjJumpA, xPos, yPos);
+            } else if (aniCount < 20) {
+              ctx.drawImage(imgObjJumpB, xPos, yPos);
+            } else {
+              ctx.drawImage(imgObjJumpC, xPos, yPos);
+            }
+          } else {
+            if (aniCount < 10) {
+              ctx.drawImage(imgObjJumpAL, xPos, yPos);
+            } else if (aniCount < 20) {
+              ctx.drawImage(imgObjJumpBL, xPos, yPos);
+            } else {
+              ctx.drawImage(imgObjJumpCL, xPos, yPos);
+            }
+          }
+        } else {
+          if (!runLeft && !runRight) {
+            if (faceRight) {
+              if (aniCount < 20) {
+                ctx.drawImage(imgObjStandA, xPos, yPos);
+              } else {
+                ctx.drawImage(imgObjStandB, xPos, yPos);
+              }
+            } else {
+              if (aniCount < 20) {
+                ctx.drawImage(imgObjStandAL, xPos, yPos);
+              } else {
+                ctx.drawImage(imgObjStandBL, xPos, yPos);
+              }
+            }
+          }
+
+          if (runRight) {
+            if (aniCount < 10) {
+              ctx.drawImage(imgObjRunA, xPos, yPos);
+            } else if (aniCount < 20) {
+              ctx.drawImage(imgObjRunB, xPos, yPos);
+            } else if (aniCount < 30) {
+              ctx.drawImage(imgObjRunC, xPos, yPos);
+            } else if (aniCount < 40) {
+              ctx.drawImage(imgObjRunD, xPos, yPos);
+            } else if (aniCount < 50) {
+              ctx.drawImage(imgObjRunE, xPos, yPos);
+            } else {
+              ctx.drawImage(imgObjRunF, xPos, yPos);
+            }
+          }
+
+          if (runLeft) {
+            if (aniCount < 10) {
+              ctx.drawImage(imgObjRunAL, xPos, yPos);
+            } else if (aniCount < 20) {
+              ctx.drawImage(imgObjRunBL, xPos, yPos);
+            } else if (aniCount < 30) {
+              ctx.drawImage(imgObjRunCL, xPos, yPos);
+            } else if (aniCount < 40) {
+              ctx.drawImage(imgObjRunDL, xPos, yPos);
+            } else if (aniCount < 50) {
+              ctx.drawImage(imgObjRunEL, xPos, yPos);
+            } else {
+              ctx.drawImage(imgObjRunFL, xPos, yPos);
+            }
+          }
+        }
+
+        if (moving) {
+          if (faceRight) {
+            xPos += 5;
+          } else {
+            xPos -= 5;
+          }
+        }
+
+        if (jumping) {
+          if (aniCount < 15) yPos -= 7;
+          else if (aniCount < 30) yPos += 7;
+        }
+
+        if (xPos < 0) xPos = 0;
+
+        if (xPos > 600) xPos = 600;
+
+        aniCount++;
+
+        if (aniCount > 60) aniCount = 0;
+
+        if (aniCount > 30) {
+          jumping = false;
+          yPos = 82;
+        }
+      }
+
+      function init() {
+        const SPRITE_PATH = "common/sprites/";
+        imgObjJumpA.src = SPRITE_PATH + "redJumpA36.png";
+        imgObjJumpB.src = SPRITE_PATH + "redJumpB36.png";
+        imgObjJumpC.src = SPRITE_PATH + "redJumpC36.png";
+        imgObjJumpAL.src = SPRITE_PATH + "redJumpA36L.png";
+        imgObjJumpBL.src = SPRITE_PATH + "redJumpB36L.png";
+        imgObjJumpCL.src = SPRITE_PATH + "redJumpC36L.png";
+        imgObjStandA.src = SPRITE_PATH + "redStandA64.png";
+        imgObjStandB.src = SPRITE_PATH + "redStandB64.png";
+        imgObjStandAL.src = SPRITE_PATH + "redStandA64L.png";
+        imgObjStandBL.src = SPRITE_PATH + "redStandB64L.png";
+        imgObjRunA.src = SPRITE_PATH + "redRunningA36.png";
+        imgObjRunB.src = SPRITE_PATH + "redRunningB36.png";
+        imgObjRunC.src = SPRITE_PATH + "redRunningC36.png";
+        imgObjRunD.src = SPRITE_PATH + "redRunningD36.png";
+        imgObjRunE.src = SPRITE_PATH + "redRunningE36.png";
+        imgObjRunF.src = SPRITE_PATH + "redRunningF36.png";
+        imgObjRunAL.src = SPRITE_PATH + "redRunningA36L.png";
+        imgObjRunBL.src = SPRITE_PATH + "redRunningB36L.png";
+        imgObjRunCL.src = SPRITE_PATH + "redRunningC36L.png";
+        imgObjRunDL.src = SPRITE_PATH + "redRunningD36L.png";
+        imgObjRunEL.src = SPRITE_PATH + "redRunningE36L.png";
+        imgObjRunFL.src = SPRITE_PATH + "redRunningF36L.png";
+        imgObjShootA.src = SPRITE_PATH + "redShootA.png";
+        imgObjShootAL.src = SPRITE_PATH + "redShootAL.png";
+        imgObjBulletA.src = SPRITE_PATH + "bulletA.png";
+        imgObjBackGround.src = SPRITE_PATH + "back.png";
+        imgObjShadowA.src = SPRITE_PATH + "shadow.png";
+        imgObjCar0.src = SPRITE_PATH + "car0.png";
+        imgObjCar1.src = SPRITE_PATH + "car1.png";
+        imgObjCar2.src = SPRITE_PATH + "car2.png";
+        imgObjCar3.src = SPRITE_PATH + "car3.png";
+        imgObjCar4.src = SPRITE_PATH + "car4.png";
+        imgObjCar5.src = SPRITE_PATH + "car5.png";
+        imgObjCar6.src = SPRITE_PATH + "car6.png";
+        imgObjCar7.src = SPRITE_PATH + "car7.png";
+        imgObjCar8.src = SPRITE_PATH + "car8.png";
+        imgObjCar9.src = SPRITE_PATH + "car9.png";
+        imgObjCar10.src = SPRITE_PATH + "car10.png";
+        imgObjCar11.src = SPRITE_PATH + "car11.png";
+        imgObjCar12.src = SPRITE_PATH + "car12.png";
+        imgObjCar13.src = SPRITE_PATH + "car13.png";
+        imgObjCarHit0.src = SPRITE_PATH + "carHit0.png";
+        imgObjCarHit1.src = SPRITE_PATH + "carHit1.png";
+        imgObjCarHit2.src = SPRITE_PATH + "carHit2.png";
+        imgObjCarHit3.src = SPRITE_PATH + "carHit3.png";
+        imgObjCarHit4.src = SPRITE_PATH + "carHit4.png";
+        imgObjCarHit5.src = SPRITE_PATH + "carHit5.png";
+        imgObjCarHit6.src = SPRITE_PATH + "carHit6.png";
+        imgObjCarHit7.src = SPRITE_PATH + "carHit7.png";
+        imgObjCarHit8.src = SPRITE_PATH + "carHit8.png";
+        imgObjCarHit9.src = SPRITE_PATH + "carHit9.png";
+        imgObjCarHit10.src = SPRITE_PATH + "carHit10.png";
+        imgObjCarHit11.src = SPRITE_PATH + "carHit11.png";
+        imgObjCarHit12.src = SPRITE_PATH + "carHit12.png";
+        imgObjCarHit13.src = SPRITE_PATH + "carHit13.png";
+        imgObjCarDebris0.src = SPRITE_PATH + "carDebris0.png";
+        imgObjCarDebris1.src = SPRITE_PATH + "carDebris1.png";
+        imgObjCarDebris2.src = SPRITE_PATH + "carDebris2.png";
+        imgObjCarDebris3.src = SPRITE_PATH + "carDebris0.png";
+        imgObjCarDebris4.src = SPRITE_PATH + "carDebris1.png";
+        imgObjCarDebris5.src = SPRITE_PATH + "carDebris5.png";
+        imgObjCarDebris6.src = SPRITE_PATH + "carDebris2.png";
+        imgObjCarDebris7.src = SPRITE_PATH + "carDebris7.png";
+        imgObjCarDebris8.src = SPRITE_PATH + "carDebris0.png";
+        imgObjCarDebris9.src = SPRITE_PATH + "carDebris9.png";
+        imgObjCarDebris10.src = SPRITE_PATH + "carDebris10.png";
+        imgObjCarDebris11.src = SPRITE_PATH + "carDebris11.png";
+        imgObjCarDebris12.src = SPRITE_PATH + "carDebris12.png";
+        imgObjCarDebris13.src = SPRITE_PATH + "carDebris13.png";
+        imgObjCarSpurt1.src = SPRITE_PATH + "spurt1.png";
+        imgObjCarSpurt2.src = SPRITE_PATH + "spurt2.png";
+        imgObjCarSpurt3.src = SPRITE_PATH + "spurt3.png";
+        imgObjCarSpurt4.src = SPRITE_PATH + "spurt4.png";
+        imgObjCarSpurt5.src = SPRITE_PATH + "spurt5.png";
+        imgObjCarSpurt6.src = SPRITE_PATH + "spurt6.png";
+        imgObjSkip.src = SPRITE_PATH + "skip.png";
+        imgObjKeyUp.src = SPRITE_PATH + "keyUp2.png";
+        imgObjKeyDown.src = SPRITE_PATH + "keyDown2.png";
+        imgObjKeyLeft.src = SPRITE_PATH + "keyLeft2.png";
+        imgObjKeyRight.src = SPRITE_PATH + "keyRight2.png";
+        imgObjExplosion1.src = SPRITE_PATH + "explosion1.png";
+        bulletSound.volume = 0.5;
+        bulletSound2.volume = 0.5;
+
+        const SOUND_PATH = "common/sounds/";
+        bulletSound.src = SOUND_PATH + "shoot.wav";
+        bulletSound2.src = SOUND_PATH + "shoot.wav";
+        crash1Sound.src = SOUND_PATH + "crash1.wav";
+        crash2Sound.src = SOUND_PATH + "crash2.wav";
+        glass1Sound.src = SOUND_PATH + "glass1.wav";
+        glass2Sound.src = SOUND_PATH + "glass2.wav";
+        metal1Sound.src = SOUND_PATH + "metal1.wav";
+
+        document.onkeydown = function (evt) {
+          evt = evt || window.event;
+          if (evt.keyCode == 83) {
+            shooting = true;
+            if (faceRight) {
+              bulletStart = xPos + 120;
+              bulletRight = true;
+            } else {
+              bulletStart = xPos - 40;
+              bulletRight = false;
+            }
+            keyDown = 5;
+          }
+
+          if (evt.keyCode == 68) {
+            runRight = true;
+            runLeft = false;
+            faceRight = true;
+            moving = true;
+            shooting = false;
+            keyRight = 5;
+          }
+
+          if (evt.keyCode == 65) {
+            runLeft = true;
+            runRight = false;
+            faceRight = false;
+            moving = true;
+            shooting = false;
+            keyLeft = 5;
+          }
+
+          if (evt.keyCode == 87) {
+            keyUp = 5;
+            shooting = false;
+            if (!jumping) {
+              jumping = true;
+              aniCount = 0;
+            }
+          }
+        };
+
+        document.onkeyup = function (evt) {
+          vt = evt || window.event;
+          if (evt.keyCode == 68) {
+            runRight = false;
+            moving = false;
+            keyRight = 0;
+          }
+
+          if (evt.keyCode == 65) {
+            runLeft = false;
+            moving = false;
+            keyLeft = 0;
+          }
+
+          if (evt.keyCode == 87) {
+            keyUp = 0;
+          }
+
+          if (evt.keyCode == 83) {
+            shooting = false;
+            keyDown = 0;
+          }
+        };
+      }
+
+      function renderScene() {
+        clearCanv();
+        drawSprite();
+      }
+
+      function drawDemo(cvsID) {
+        var g = new Cango3D(cvsID);
+        g.clearCanvas("#eeeea0");
+        g.setWorldCoords3D(-200, -200, 800);
+        var circle = g.compileShape3D(shapeDefs.circle, "cyan", 300);
+        g.labelShape3D(circle, "Ab", 0, 0, 30, 5, "white");
+        g.render3D(circle);
+        var xfrm = new Transform3D();
+        xfrm.rotate(uY, 30);
+        xfrm.rotate(uX, -20);
+        xfrm.translate(300, 200, -100);
+        g.render3D(circle, xfrm);
+      }
+    </script>
+  </head>
+  <body>
+    <div class="outerWrapper">
+      <div class="main">
+        <a href="index.html"><img src="common/SifuF.png" width="1000px" /></a>
+        <div class="intro">
+          <h3>
+            Welcome to the home of SifuF. This site contains some of my
+            engineering related projects/hobbies
+          </h3>
+        </div>
+        <div class="intro">
+          <canvas
+            id="animationWindow"
+            width="700"
+            height="200"
+            style="border: 2px solid #000000"
+          ></canvas>
+        </div>
+        <div class="product">
+          <div style="width: parent">
+            <div style="float: left; width: 30%">
+              <a href="portables/portables.html"
+                ><img src="portables/portables.jpg" width="250px"
+              /></a>
+            </div>
+            <div style="float: left; width: 70%">
+              <h3>SixtyFree Lite-R</h3>
+              <br />Custom built portable Nintendo 64 console
+            </div>
+            <br style="clear: left" />
+          </div>
+        </div>
+        <div class="product">
+          <div style="width: parent">
+            <div style="float: left; width: 30%">
+              <a href="programming/programming.html"
+                ><img src="programming/programming.jpg" width="250px"
+              /></a>
+            </div>
+            <div style="float: left; width: 70%">
+              <h3>Programming and Computer graphics</h3>
+            </div>
+            <br style="clear: left" />
+          </div>
+        </div>
+        <div class="product">
+          <div style="width: parent">
+            <div style="float: left; width: 30%">
+              <a href="electronics/electronics.html"
+                ><img src="electronics/electronics.jpg" width="250px"
+              /></a>
+            </div>
+            <div style="float: left; width: 70%">
+              <h3>Electronics and Robots</h3>
+            </div>
+            <br style="clear: left" />
+          </div>
+        </div>
+        <div class="product">
+          <div style="width: parent">
+            <div style="float: left; width: 30%">
+              <a href="pcbuild/pcbuild.html"
+                ><img src="pcbuild/pcbuild.jpg" width="250px"
+              /></a>
+            </div>
+            <div style="float: left; width: 70%">
+              <h3>Custom Watercooled PC Builds</h3>
+            </div>
+            <br style="clear: left" />
+          </div>
+        </div>
+        <div class="product">
+          <div style="width: parent">
+            <div style="float: left; width: 30%">
+              <a href="jor2/jor2.html"
+                ><img src="jor2/jor2.jpg" width="250px"
+              /></a>
+            </div>
+            <div style="float: left; width: 70%">
+              <h3>JOR 2</h3>
+              <br />Streets of Rage 2 (Sega Megadrive/Genesis) ROM hack
+            </div>
+            <br style="clear: left" />
+          </div>
+        </div>
+        <div class="product">
+          <div style="width: parent">
+            <div style="float: left; width: 30%">
+              <a href="modsofthegods/modsofthegods.html"
+                ><img src="modsofthegods/xbox/n6.jpg" width="250px"
+              /></a>
+            </div>
+            <div style="float: left; width: 70%">
+              <h3>Xbox mods</h3>
+            </div>
+            <br style="clear: left" />
+          </div>
+        </div>
+        <div class="product">
+          <div style="width: parent">
+            <div style="float: left; width: 30%">
+              <a href="vehicles/vehicles.html"
+                ><img src="vehicles/vehicles.jpg" width="250px"
+              /></a>
+            </div>
+            <div style="float: left; width: 70%">
+              <h3>Vehicle related projects</h3>
+            </div>
+            <br style="clear: left" />
+          </div>
+        </div>
+        <div class="product">
+          <div style="width: parent">
+            <div style="float: left; width: 30%">
+              <a href="music/music.html"
+                ><img src="music/music.jpg" width="250px"
+              /></a>
+            </div>
+            <div style="float: left; width: 70%">
+              <h3>Music Production</h3>
+            </div>
+            <br style="clear: left" />
+          </div>
+        </div>
+        <div class="intro">
+          <br />
+          BTC: 1K7LX9DAWxS29DW2fpRor5fyBi1WzUNkLx <br />
+          <br />
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript">
+      init();
+      setInterval("renderScene()", 20);
+    </script>
+  </body>
+</html>
